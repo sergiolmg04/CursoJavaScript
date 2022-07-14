@@ -1,0 +1,39 @@
+{{>partials/header}}
+<aside>
+    <div id="menu-opener" onclick="clicou(teste=teste+1)">
+        <img src="https://png.pngtree.com/png-clipart/20190614/original/pngtree-menu-vector-icon-png-image_3791388.jpg" width="36">
+    </div>
+    <div id="menu-area">
+        <nav>
+        <ul>
+            <li> Controle de Materiais</a>
+            <a href="TendaA10" target="_blank">
+            <ol class="sublista">Tenda A-10</ol>
+            </a>
+            </li>
+            <li>Indicadores
+            <a href="AderenciaProgramacao" target="_blank">
+            <ol class="sublista">Aderência da Programação</ol>
+            </a>
+            </li>
+            <li>Acompanhamentos
+            <a href="AndamentoAvaliacoes" target="_blank">
+            <ol class="sublista">Andamento das Avaliações</ol>
+            </a>
+            </li>
+        </ul>
+        </nav>
+    </div>
+</aside>
+    <ul>
+        <h4>No menu ao lado podemos ver os seguintes Dashboards:</h4>
+        {{#menu}}
+            <li class="menu">{{.}}</li>
+        {{/menu}}
+    </ul>
+    <h2>Deixe sua avaliação</h2>
+    <form method="GET">
+        <input type="text" name="nome" placeholder = "Digite aqui..."/> <br/>
+        <input type="submit" value="Enviar"/>
+    </form>
+{{>partials/footer}}
