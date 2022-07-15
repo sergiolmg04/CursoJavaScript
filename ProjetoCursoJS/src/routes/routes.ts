@@ -5,11 +5,10 @@ import * as homeControllers from "../controllers/homeControllers"; //importando 
 const router = Router();
 //os métodos podem ser GET, POST, PUT e DELETE
 router.get('/', homeControllers.FuncaoGetHome); //usando uma função da home controllers
-
 router.get('/TendaA10', DashboardsControllers.SemDash);
 
-router.get('/AderenciaProgramacao', DashboardsControllers.SemDash);
+//router.get('/AderenciaProgramacao', DashboardsControllers.SemDash);
 
-router.get('/AndamentoAvaliacoes', DashboardsControllers.SemDash);
+//router.get('/AndamentoAvaliacoes', DashboardsControllers.SemDash);
 
 export default router; //exportar a variável router p/ poder usar minhas rotas
