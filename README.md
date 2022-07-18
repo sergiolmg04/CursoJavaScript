@@ -1,1 +1,1 @@
-Acho que foi em
+Favor ignorar os primeiros commits, foram feitos em momentos de pura tensão acadêmica.

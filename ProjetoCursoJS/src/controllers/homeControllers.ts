@@ -57,7 +57,7 @@ try{
   for(let i in NotebooksLenovo){
   //Variável que vai receber o array de preços por HDD
   let Preco:any = [];
-  const browser = await puppeteer.launch({headless:false}); //inicia o chromium
+  const browser = await puppeteer.launch({headless:true}); //inicia o chromium
   const page = await browser.newPage();
   await page.goto(NotebooksLenovo[i].Link); //abre o link
   const swats:any = await page.$$('.swatch');
@@ -85,15 +85,15 @@ try{
   IndividualPreco = parseFloat(IndividualPreco);
   Preco.push({HDD: HDD, Preco: IndividualPreco});
     } //fecha o for do HDD e Preco    
-  console.log(Preco);
   await browser.close();
   NotebooksLenovo[i].Preco = Preco;
-  console.log(NotebooksLenovo);
   } //fecha o for
 }
 catch(e){
   console.log(e);
 }
+
+console.log(NotebooksLenovo);
 
 //retornando para a pag
 res.json({Notebooks: NotebooksLenovo});
