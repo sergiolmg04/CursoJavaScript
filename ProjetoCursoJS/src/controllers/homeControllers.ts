@@ -2,6 +2,7 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
 import { Request, Response } from "express";
+import * as puppeteer from "puppeteer";
 
 //exportando a funçao GetHome para a página principal do servidor
 export const FuncaoGetHome = async (req:Request, res:Response)=>{
@@ -12,7 +13,7 @@ const HTML = await axios.get('https://webscraper.io/test-sites/e-commerce/allino
 //Utilizando a lib Cheerio para quebrar o string HTML e poder fazer pesquisas
 const $ = cheerio.load(HTML.data);
 
-//Varia´vel que vai receber todos os itens que contem a classe caption
+//Variável que vai receber todos os itens que contem a classe caption
 const notebook:any = $('.caption');
 
 //variável que vai receber o array dos notebooks da lenovo
@@ -23,9 +24,11 @@ for(let i of notebook){
 
 //declaração da variável que vai receber o objeto com os dados Preço, Link e Nome de todos os notebooks
 let dadosNotebooks = {
+  Nome: i.childNodes[3].childNodes[1].attribs.title,
   Preco: parseFloat(i.children[1].children[0].data.replace("$","")),
-  Link: "https://webscraper.io"+i.childNodes[3].childNodes[1].attribs.href,
-  Nome: i.childNodes[3].childNodes[1].attribs.title
+  Description: i.childNodes[5].childNodes[0].data,
+  Link: "https://webscraper.io"+i.childNodes[3].childNodes[1].attribs.href
+  
 }
 
 //deixando o title maiúsculo
@@ -49,19 +52,50 @@ let length = NotebooksLenovo.length;
   }        
 }
 
-console.log(NotebooksLenovo);
-
 //Abrindo links e pegando conteúdo por notebook
+try{
+  for(let i in NotebooksLenovo){
+  //Variável que vai receber o array de preços por HDD
+  let Preco:any = [];
+  const browser = await puppeteer.launch({headless:false}); //inicia o chromium
+  const page = await browser.newPage();
+  await page.goto(NotebooksLenovo[i].Link); //abre o link
+  const swats:any = await page.$$('.swatch');
+  try{
+  await page.waitForSelector("#closeCookieBanner", { //pra fechar o aviso de cookies
+    timeout: 20000});
+  }
+  catch(e){}
+  for (let i in swats){
+  //clica no preço
+  await swats[i].click('[target=_blank]');
+  
+  //pega o valor do HDD
+  const conteudoHDD:any = await swats[i].getProperty('textContent');
+  const HDD:any = await conteudoHDD.jsonValue();
+  
+  //pega o valor do notebook por HDD
+  const DivPreco:any = await page.$$('.price');
+  const conteudoPreco:any = await DivPreco[0].getProperty('textContent');
+  let IndividualPreco:any = await conteudoPreco.jsonValue();
 
+  //criando uma variável com o HDD e o Preço
+  
+  IndividualPreco = IndividualPreco.replace('$','');
+  IndividualPreco = parseFloat(IndividualPreco);
+  Preco.push({HDD: HDD, Preco: IndividualPreco});
+    } //fecha o for do HDD e Preco    
+  console.log(Preco);
+  await browser.close();
+  NotebooksLenovo[i].Preco = Preco;
+  console.log(NotebooksLenovo);
+  } //fecha o for
+}
+catch(e){
+  console.log(e);
+}
+
+//retornando para a pag
+res.json({Notebooks: NotebooksLenovo});
 
 };// fecha a FuncaoGetHome
-
-//res.render("pages/home");
-    //console.log("Se deu certo, vai aparecer " );
-    /*let user:string = "Sérgio";
-    let menu:string[] = ["Constrole de Materiais", "Aderência da Programação", "Andamento das Avaliações"];
-    let query:string = "Ainda não recebi nada";
-    /*, funcao); //manda informações para a página*/
-   
-    //query = req.query.nome as string;*/
-//};
