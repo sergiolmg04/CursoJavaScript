@@ -1,40 +1,36 @@
-import express, {Request, Response} from 'express'; //importando as funções de server e os tipos de vriáveis da biblioteca express
-import path from 'path'; // importando da biblioteca que vem junto com o express para poder definir o dirname
-import mustache from 'mustache-express';
-import dotenv from 'dotenv';
+//importando as bibliotecas necessárias pra rodar o server
+import express, {Request, Response} from 'express'; //importando as funções de server e os tipos de variáveis 
+import path from 'path'; //biblioteca que vem junto com o express para poder definir o dirname
+import mustache from 'mustache-express'; //biblioteca que vou usar pra mostrar o resultado
+import dotenv from 'dotenv'; //lib que permite eu escolher a porta que vou hospedar meu host
 import MainRoutes from './routes/routes'; //importando a variável router p/ poder usar as minhas rotas
 
-dotenv.config(); //configurando o dotenv
+//configurando o dotenv
+dotenv.config(); 
 
-const server = express(); //criando o server
+//criando o server
+const server = express(); 
 
-server.set('view engine', 'mustache'); //habilitando o mustache
+//habilitando o mustache
+server.set('view engine', 'mustache'); 
 server.set('views', path.join(__dirname,'views')); //mostrando qual a pasta que vou salvar
 server.engine('mustache', mustache());
 
 server.use(express.urlencoded({extended:true}))
 
-server.use(MainRoutes);// habilitando as rotas do meu arquivo separado no server
+//habilitando as rotas do meu arquivo separado no server
+server.use(MainRoutes);
 
-server.use(express.static(path.join(__dirname,'../public'))); //mostra o caminho para a pasta
+//mostra o caminho para a pasta
+server.use(express.static(path.join(__dirname,'../public'))); 
 
-server.use((req:Request, res:Response)=>{
+//configurando o error 404
+server.use((req:Request, res:Response)=>{ 
     res.status(404).send("Página não encontrada");
 });
 
-server.listen(process.env.PORT); //criando o server e mostrando a porta do local host
+//configurando a porta do local host
+server.listen(process.env.PORT); 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-console.log("deu certo");
+//Exibindo uma mensagem que abre o server no click
+console.log("O server pode ser acessado através da porta " + process.env.PORT);
